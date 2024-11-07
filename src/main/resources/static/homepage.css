@@ -1,0 +1,31 @@
+body {
+    background: linear-gradient(to right, #3f4c6b, #606c88);
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+
+}
+
+.center-card {
+    width: 50%;
+}
+
+.card-header {
+    background: brown;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}

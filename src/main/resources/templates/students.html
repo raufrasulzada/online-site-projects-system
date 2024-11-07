@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        body {
+            background: linear-gradient(to right, #3f4c6b, #606c88);
+        }
+
+        h1 {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" th:href="@{/homepage}">University Management</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/students}">Student Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/courses}">Course Management</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        <h1>Students</h1>
+    </div>
+    <div class="row">
+        <div class="col-lg-5">
+            <a th:href="@{/students/new}" class="btn btn-success btn-sm mb-4">New Student</a>
+        </div>
+        <div class="col-lg-7">
+            <form method="get" action="/students">
+                <div class="form-row align-items-center">
+                    <div class="col-auto my-1">
+                        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
+                    </div>
+                    <div class="col-auto my-1">
+                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name">
+                    </div>
+                    <div class="col-auto my-1">
+                        <select class="custom-select mr-sm-2" id="courseName" name="courseName">
+                            <option value="" selected>Choose Course...</option>
+                            <option th:each="course : ${courses}" th:value="${course.courseName}" th:text="${course.courseName}"></option>
+                        </select>
+                    </div>
+                    <div class="col-auto my-1">
+                        <select class="custom-select mr-sm-2" id="sortField" name="sortField">
+                            <option value="firstName" th:selected="${sortField == 'firstName'}">First Name</option>
+                            <option value="lastName" th:selected="${sortField == 'lastName'}">Last Name</option>
+                        </select>
+                    </div>
+                    <div class="col-auto my-1">
+                        <select class="custom-select mr-sm-2" id="sortOrder" name="sortOrder">
+                            <option value="asc" th:selected="${sortOrder == 'asc'}">Ascending</option>
+                            <option value="desc" th:selected="${sortOrder == 'desc'}">Descending</option>
+                        </select>
+                    </div>
+                    <div class="col-auto my-1">
+                        <button type="submit" class="btn btn-primary">Apply</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table class="table table-striped table-dark">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Courses</th>
+            <th>Tasks</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student: ${students}">
+            <td th:text="${student.firstName}"></td>
+            <td th:text="${student.lastName}"></td>
+            <td>
+                <ul>
+                    <li th:each="course : ${student.courses}" th:text="${course.courseName}"></li>
+                </ul>
+            </td>
+            <td>
+                <a th:href="@{/students/update/{id}(id=${student.id})}" class="btn btn-success">Update</a>
+                <a th:href="@{/students/{id}(id=${student.id})}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <nav aria-label="Students Pagination" th:if="${totalPages > 0}">
+        <ul class="pagination justify-content-center">
+            <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:href="@{/students(page=0)}" th:if="${currentPage != 0}">First</a>
+            </li>
+            <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:href="@{/students(page=${currentPage - 1})}">Previous</a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(0, totalPages - 1)}" th:class="${currentPage == page ? 'page-item active' : 'page-item'}">
+                <a class="page-link" th:href="@{/students(page=${page})}" th:text="${page + 1}"></a>
+            </li>
+            <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:href="@{/students(page=${currentPage + 1})}">Next</a>
+            </li>
+            <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:href="@{/students(page=${totalPages - 1})}">Last</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
